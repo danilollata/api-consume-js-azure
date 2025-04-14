@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GK servicios y soluciones</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous" />
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/alertify.min.css" />
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/themes/default.min.css" />
+    <style>
+      body {
+        background-color: #f7f6f6;
+      }
+      table thead {
+        background-color: #00c3f4;
+        color: white;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="container mt-4 shadow-lg p-3 mb-5 bg-body rounded">
+      <button id="btnCrear" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalEnvio">Crear</button>
+
+      <table id="tablaenvios" class="table mt-2 table-bordered table-striped">
+        <thead>
+          <tr class="text-center">
+            <th>id</th>
+            <th>remitente</th>
+            <th>destinatario</th>
+            <th>dirección de envío</th>
+            <th>fecha de envio</th>
+            <th>nombre de repartidor</th>
+            <th>apellido de repartidor</th>
+            <th>estado</th>
+            <th>acciones</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="modal fade" id="modalEnvio" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Envío</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                <label for="remitente" class="col-form-label">Remitente:</label>
+                <input type="text" class="form-control" id="remitente" name="remitente" placeholder="Nombre del remitente" />
+
+                <label for="destinatario" class="col-form-label">Destinatario:</label>
+                <input type="text" class="form-control" id="destinatario" name="destinatario" placeholder="Nombre del destinatario" />
+
+                <label for="direccion_envio" class="col-form-label">Dirección de envío:</label>
+                <input type="text" class="form-control" id="direccion_envio" name="direccion_envio" placeholder="Dirección del destinatario" />
+
+                <label for="fecha_envio" class="col-form-label">Fecha de envío:</label>
+                <input type="datetime-local" class="form-control" id="fecha_envio" name="fecha_envio" />
+
+                <label for="repartidor_id" class="col-form-label">Repartidor:</label>
+                <select class="form-control" name="repartidor_id" id="repartidor_id">
+                  <option value="">Seleccione un repartidor</option>
+                </select>
+
+                <label for="estado_id" class="col-form-label">Estado del envío:</label>
+                <select class="form-control" name="estado_id" id="estado_id">
+                  <option value="">Seleccione un estado</option>
+                </select>
+              </div>
+       
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
+        </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/alertify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+    <script src="code.js"></script>
+  </body>
+</html>
