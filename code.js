@@ -1,3 +1,13 @@
+const navbar = document.getElementById("navbar");
+
+window.addEventListener("scroll", () => {
+  if (window.scrollY > 50) {
+    navbar.classList.add("sticky");
+  } else {
+    navbar.classList.remove("sticky");
+  }
+});
+
 const url = "https://api-gkserviciosysoluciones.azurewebsites.net/api/v1/envios";
 const urlRepartidores = "https://api-gkserviciosysoluciones.azurewebsites.net/api/v1/repartidores";
 const urlEstados = "https://api-gkserviciosysoluciones.azurewebsites.net/api/v1/estados_envio";
@@ -6,7 +16,7 @@ const contenedor = document.querySelector("tbody");
 let resultados = "";
 
 const modalEnvio = new bootstrap.Modal(document.getElementById("modalEnvio"));
-const formEnvio = document.querySelector("form");
+const formEnvio = document.getElementById("envioForm");
 const btnCrear = document.getElementById("btnCrear");
 
 const remitente = document.getElementById("remitente");
@@ -42,16 +52,19 @@ const mostrar = (envios) => {
   resultados = ""; // Limpiar resultados antes de mostrar
   envios.forEach((envio) => {
     resultados += `<tr>
-                        <td>${envio.envio_id}</td>
-                        <td>${envio.remitente}</td>
-                        <td>${envio.destinatario}</td>
-                        <td>${envio.direccion_envio}</td>
-                        <td>${envio.fecha_envio}</td>
-                        <td>${envio.nombre_repartidor}</td>
-                        <td>${envio.apellido_repartidor}</td>
-                        <td>${envio.estado}</td>
-                        <td class="text-center text-nowrap"><a class="btnEditar btn btn-primary">Editar</a><a class="btnBorrar btn btn-danger ms-2">Borrar</a></td>
-                      </tr>`;
+                                    <td>${envio.envio_id}</td>
+                                    <td>${envio.remitente}</td>
+                                    <td>${envio.destinatario}</td>
+                                    <td>${envio.direccion_envio}</td>
+                                    <td>${envio.fecha_envio}</td>
+                                    <td>${envio.nombre_repartidor}</td>
+                                    <td>${envio.apellido_repartidor}</td>
+                                    <td>${envio.estado}</td>
+                                    <td class="text-center text-nowrap">
+                                        <button class="btnEditar btn btn-primary">Editar</button>
+                                        <button class="btnBorrar btn btn-danger ms-2">Borrar</button>
+                                    </td>
+                                </tr>`;
   });
   contenedor.innerHTML = resultados;
 };
@@ -188,58 +201,41 @@ formEnvio.addEventListener("submit", (e) => {
   const fechaHora = new Date(fechaEnvio.value); // Convertir a objeto Date
   const fechaHoraFormateada = fechaHora.toISOString(); // Convertir a formato ISO
 
-  if (opcion === "crear") {
-    // Crear un nuevo envío
-    fetch("https://api-gkserviciosysoluciones.azurewebsites.net/api/v1/envio", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        remitente: remitente.value,
-        destinatario: destinatario.value,
-        direccion_envio: direccionEnvio.value,
-        fecha_envio: fechaHoraFormateada, // Usar la fecha con la hora
-        repartidor_id: parseInt(repartidorId.value),
-        estado_id: parseInt(estadoId.value),
-      }),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error("Error al crear el envío: " + response.statusText);
-        }
-      })
-      .then(() => {
-        cargarEnvios(); // Recargar los envíos después de crear
-      })
-      .catch((error) => console.error("Error:", error));
-  }
+  const envioData = {
+    remitente: remitente.value,
+    destinatario: destinatario.value,
+    direccion_envio: direccionEnvio.value,
+    fecha_envio: fechaHoraFormateada, // Usar la fecha con la hora
+    repartidor_id: parseInt(repartidorId.value),
+    estado_id: parseInt(estadoId.value),
+  };
 
-  if (opcion === "editar") {
-    // Editar un envío existente
-    fetch(`https://api-gkserviciosysoluciones.azurewebsites.net/api/v1/envio/${idForm}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        remitente: remitente.value,
-        destinatario: destinatario.value,
-        direccion_envio: direccionEnvio.value,
-        fecha_envio: fechaHoraFormateada, // Usar la fecha con la hora
-        repartidor_id: parseInt(repartidorId.value),
-        estado_id: parseInt(estadoId.value),
-      }),
+  const fetchConfig = {
+    method: opcion === "crear" ? "POST" : "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(envioData),
+  };
+
+  const apiUrl = opcion === "crear" ? "https://api-gkserviciosysoluciones.azurewebsites.net/api/v1/envio" : `https://api-gkserviciosysoluciones.azurewebsites.net/api/v1/envio/${idForm}`;
+
+  fetch(apiUrl, fetchConfig)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Error al ${opcion === "crear" ? "crear" : "editar"} el envío: ${response.statusText}`);
+      }
+      return response.json();
     })
-      .then((response) => response.json())
-      .then(() => {
-        cargarEnvios(); // Recargar los envíos después de editar
-      })
-      .catch((error) => console.error("Error al editar el envío:", error));
-  }
+    .then(() => {
+      cargarEnvios(); // Recargar los envíos después de crear/editar
+    })
+    .catch((error) => console.error("Error:", error));
 
   // Cerrar el modal
   modalEnvio.hide();
+});
+
+document.getElementById("logo").addEventListener("click", function () {
+  window.location.reload();
 });
